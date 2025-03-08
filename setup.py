@@ -2,16 +2,16 @@
 from distutils.core import setup
 
 setup(
-    name='speeedy',
-    packages=['speeedy'],
+    name='tornado',
+    packages=['tornado'],
     version='0.0.1',
     license='MIT',
-    description='Speeedy just want to check speed',
+    description='Structure to handle tasks',
     author='Denis Minka',
     author_email='minka.denis@gmail.com',
-    url='https://github.com/vblacksquare/Speedy',
-    download_url='https://github.com/vblacksquare/Speedy/archive/refs/tags/release.tar.gz',
-    keywords=['util', "speed", "counter"],
+    url='https://github.com/vblacksquare/Tornado',
+    download_url='https://github.com/vblacksquare/Tornado/archive/refs/tags/release.tar.gz',
+    keywords=['util', "structure", "async"],
     install_requires=[],
     classifiers=[
         'Development Status :: 3 - Alpha',
