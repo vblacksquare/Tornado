@@ -95,8 +95,12 @@ class Tornado:
         self.__queue: list[TornadoItem] = []
 
     @property
-    def speeedies(self):
+    def speeedies(self) -> list[Speeedy]:
         return [item.speeedy for item in self.__queue]
+
+    @property
+    def length(self):
+        return self.__length
 
     async def set_length(self, value: int):
         self.__length = value
