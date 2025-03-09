@@ -191,7 +191,7 @@ class Tornado:
 
                 await item.do(
                     value_id=j,
-                    delay=(len(self.__values) / self.__length) * k
+                    delay=(len(self.__values) / self.__per_one) * k
                 )
                 added_values[j] += 1
 
