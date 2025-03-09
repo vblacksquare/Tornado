@@ -8,16 +8,18 @@ from tornado_obj import Tornado
 
 
 async def callback(value):
-    print("Its my value that I am getting 1 time per second")
+    print(f"Its my value {value} that I am getting 1 time per second")
 
 
 async def main():
-    tornado = Tornado()
+    tornado = Tornado(callback=callback, length=1)
     await tornado.add_item(0)
     await tornado.del_item(0)
     
     await tornado.add_item({"id": 1})
-    await tornado.del_item(1, lambda x: x['id'])
+    
+    while True:
+        await asyncio.sleep(1)
 
 
 if __name__ == '__main__':
