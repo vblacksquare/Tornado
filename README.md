@@ -4,7 +4,7 @@ Just a small lib implementing obj for a tasks.
 ## Usage
 ```python
 import asyncio
-from tornado import Tornado
+from tornado_obj import Tornado
 
 
 async def callback(value):
