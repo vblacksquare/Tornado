@@ -92,14 +92,7 @@ class Tornado:
         self.__main_task = None
 
         self.__values = []
-        self.__queue: list[TornadoItem] = [
-            TornadoItem(
-                id=i,
-                callback=self.__completed_item,
-                value_callback=self.__value_callback
-            )
-            for i in range(self.__length)
-        ]
+        self.__queue: list[TornadoItem] = []
 
     @property
     def speeedies(self):
@@ -116,12 +109,24 @@ class Tornado:
         except Exception as err:
             self.log.exception(err)
 
-    async def del_item(self, value_id: str):
+    async def del_item(self, by_value: str, func: typing.Callable = None):
+        def default_func(x):
+            return x
+
+        if func is None:
+            func = default_func
+
         try:
             await self.__drop()
+
+            for i, value in enumerate(self.__values):
+                if func(value) == by_value:
+                    del self.__values[i]
+                    break
+
             await self.__update_queue()
 
-            self.log.debug(f"Removed value -> {value_id}")
+            self.log.debug(f"Removed value -> {by_value}")
 
         except Exception as err:
             self.log.exception(err)
@@ -141,6 +146,15 @@ class Tornado:
             if not len(self.__values):
                 self.log.warning(f"Can't update with no values")
                 return
+
+            self.__queue = [
+                TornadoItem(
+                    id=i,
+                    callback=self.__completed_item,
+                    value_callback=self.__value_callback
+                )
+                for i in range(self.__length)
+            ]
 
             for item in self.__queue:
                 j = item.id % len(self.__values)
