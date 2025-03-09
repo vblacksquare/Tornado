@@ -56,10 +56,8 @@ class TornadoItem:
             dif = time.time() - self.task_created
             if dif < 1.0:
                 timeout = 1.0 - dif
-                self.log.debug(f"Waiting {round(timeout, 1)} seconds to make task 1/s")
-                await asyncio.sleep(1.0 - dif)
+                await asyncio.sleep(timeout)
 
-            self.log.debug(f"Created task with {value_id} and delay {delay}")
             if self.task:
                 await self.__do()
 
@@ -125,8 +123,6 @@ class Tornado:
             self.__values.append(value)
             await self.__update_queue()
 
-            self.log.debug(f"Added new value -> {value}")
-
         except Exception as err:
             self.log.exception(err)
 
@@ -147,8 +143,6 @@ class Tornado:
 
             await self.__update_queue()
 
-            self.log.debug(f"Removed value -> {by_value}")
-
         except Exception as err:
             self.log.exception(err)
 
@@ -156,8 +150,6 @@ class Tornado:
         try:
             for item in self.__queue:
                 await item.drop()
-
-            self.log.debug(f"Dropped {len(self.__queue)} queue items")
 
         except Exception as err:
             self.log.exception(err)
@@ -194,8 +186,6 @@ class Tornado:
                     delay=(len(self.__values) / self.__per_one) * k
                 )
                 added_values[j] += 1
-
-            self.log.debug(f"Updated {len(self.__queue)} queue items with {len(self.__values)} values")
 
         except Exception as err:
             self.log.exception(err)
