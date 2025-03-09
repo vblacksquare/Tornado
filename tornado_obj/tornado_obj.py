@@ -80,8 +80,8 @@ class TornadoItem:
 class Tornado:
     def __init__(
         self,
-        length: int,
-        callback: typing.Callable
+        length: int = 0,
+        callback: typing.Callable = lambda x: x,
     ):
 
         self.log = logger.bind(classname=self.__class__.__name__)
@@ -97,6 +97,11 @@ class Tornado:
     @property
     def speeedies(self):
         return [item.speeedy for item in self.__queue]
+
+    async def set_length(self, value: int):
+        self.__length = value
+        await self.__drop()
+        await self.__update_queue()
 
     async def add_item(self, value):
         try:
