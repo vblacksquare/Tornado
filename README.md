@@ -12,7 +12,7 @@ async def callback(value):
 
 
 async def main():
-    tornado = Tornado(callback=callback, length=1)
+    tornado = Tornado(callback=callback, length=1000, per_one=1)
     await tornado.add_item(0)
     await tornado.del_item(0)
     

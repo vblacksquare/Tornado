@@ -82,11 +82,14 @@ class Tornado:
         self,
         length: int = 0,
         callback: typing.Callable = lambda x: x,
+        per_one: int = None
     ):
 
         self.log = logger.bind(classname=self.__class__.__name__)
 
         self.__length = length
+        self.__per_one = per_one if per_one else self.__length
+
         self.__callback = callback
 
         self.__main_task = None
@@ -102,8 +105,17 @@ class Tornado:
     def length(self):
         return self.__length
 
+    @property
+    def per_one(self):
+        return self.__per_one
+
     async def set_length(self, value: int):
         self.__length = value
+        await self.__drop()
+        await self.__update_queue()
+
+    async def set_per_one(self, value: int):
+        self.__per_one = value
         await self.__drop()
         await self.__update_queue()
 
@@ -165,14 +177,23 @@ class Tornado:
                 for i in range(self.__length)
             ]
 
+            added_values = {}
+
             for item in self.__queue:
                 j = item.id % len(self.__values)
                 k = item.id // len(self.__values)
+
+                if j not in added_values:
+                    added_values.update({j: 0})
+
+                if added_values[j] == self.__per_one:
+                    continue
 
                 await item.do(
                     value_id=j,
                     delay=(len(self.__values) / self.__length) * k
                 )
+                added_values[j] += 1
 
             self.log.debug(f"Updated {len(self.__queue)} queue items with {len(self.__values)} values")
 
