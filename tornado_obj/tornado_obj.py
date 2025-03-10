@@ -58,11 +58,7 @@ class TornadoItem:
                 timeout = 1.0 - dif
                 await asyncio.sleep(timeout)
 
-            if self.task:
-                await self.__do()
-
-            else:
-                self.task = asyncio.create_task(self.__do())
+            self.task = asyncio.create_task(self.__do())
 
         except Exception as err:
             self.log.exception(err)
